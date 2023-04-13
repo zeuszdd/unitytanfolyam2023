@@ -1,13 +1,9 @@
-using System.Text.RegularExpressions;
-using System.Reflection.Metadata;
-using System.Runtime.CompilerServices;
 using System;
-using System.Linq.Expressions;
-using System.Reflection.PortableExecutable;
 using System.Diagnostics;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 public class Homework : MonoBehaviour
 {
@@ -19,15 +15,15 @@ public class Homework : MonoBehaviour
         // 1. feladat
         int a=38;
         int b=5;
-        float c=(a/b)f;
-        int d=a%b;
-        Debug.Log("{a}-ban a(z) {b} megvan {c} -szer, maradék: {d}".);
+        float c=(a/b);
+        int dd=a%b;
+        Debug.Log("{a}-ban a(z) {b} megvan {c} -szer, maradék: {d}.");
 
         // 2. feladat
-        int a=2, b=4, c=5;
+        a = 2; b = 4; c=5;
         string d="D", e="E", f="F";
 
-        int x1=a+b+c;
+        int x1 = a + b + c;
         string x2=a+b+e;
         string x3=b+d+c;
         string x4=f+a+b;
@@ -93,9 +89,9 @@ public class Homework : MonoBehaviour
         Debug.Log($"Az eredmény: {result}");
 
         // 6. feladat
-        for (var i = 1; i <= 10; i++)
+        for (int i = 1; i <= 10; i++)
         {
-            for (var j = 1; j < length; j++)
+            for (int j = 1; j < 10; j++)
             {
                 Debug.Log($"{i}*{j}=(i*j)");
             }
