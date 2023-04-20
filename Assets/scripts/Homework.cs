@@ -1,12 +1,9 @@
-using System;
-using System.Diagnostics;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 
 public class Homework : MonoBehaviour
 {
+    /*
     // [SerializeField] int a;
     // [SerializeField] int b;
     // Start is called before the first frame update
@@ -86,6 +83,7 @@ public class Homework : MonoBehaviour
             result*=baseNumber;
         }
         */
+    /*
         Debug.Log($"Az eredmény: {result}");
 
         // 6. feladat
@@ -95,17 +93,13 @@ public class Homework : MonoBehaviour
             {
                 Debug.Log($"{i}*{j}={i * j}");
             }
-        }
+        
 
-
-
-
-
-    }
 
     // Update is called once per frame
     void Update()
     {
 
     }
+*/
 }
