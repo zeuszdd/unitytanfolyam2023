@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] float speed = 1f;
     [SerializeField] float angularSpeed = 180f;
+    [SerializeField] Transform cameraTransform;
 
     // Start is called before the first frame update
     void Start()
@@ -74,10 +75,16 @@ public class Player : MonoBehaviour
             z -= 1;
         }
 
-        Vector3 direction = new Vector3(x, 0, z);
-        direction.Normalize(); // Normalizálni kell, keresztmozgásnál gyök2 a sebesség, ehelyett 1 lesz az érték.
+        Vector3 cameraRight = cameraTransform.right;
+        Vector3 cameraForward = cameraTransform.forward;
 
-        return direction;   
+        // Vector3 direction = new Vector3(x, 0, z); globális térben
+        Vector3 d = x * cameraRight + z * cameraForward;
+        d.y = 0;
+
+        d.Normalize(); // Normalizálni kell, keresztmozgásnál gyök2 a sebesség, ehelyett 1 lesz az érték.
+
+        return d;   
     }
 
 }
