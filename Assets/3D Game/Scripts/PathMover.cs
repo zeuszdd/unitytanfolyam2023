@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,7 @@ public class PathMover : MonoBehaviour
 {
     // [SerializeField] Vector3 point1, point2;
     [SerializeField] Transform t1, t2;
-    [SerializeField] Color c1, c2;
+    [SerializeField] Color c1 = Color.white, c2 = Color.white;
     [SerializeField] Transform movable;
     [SerializeField] float speed = 2;
 
@@ -25,8 +26,7 @@ public class PathMover : MonoBehaviour
         Vector3 p2 = t2.position;
 
         //Vector3 p = p2 + (1 - startPoint) * p1;
-
-        Vector3 p = Vector3.Lerp(p1, p2, startPoint); // Lineáris interpoláció
+        Vector3 p = Vector3.Lerp(p1, p2, startPoint); // Lineï¿½ris interpolï¿½ciï¿½
 
         nextTarget = t2.position;
         movable.position = p;

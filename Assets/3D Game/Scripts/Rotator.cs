@@ -18,7 +18,7 @@ public class Rotator : MonoBehaviour
     void Update()
     {
         // Vector3 axis = Vector3.up;
-        // tengely és mekkora szöget fordul el
+        // tengely ï¿½s mekkora szï¿½get fordul el
         transform.Rotate(axis, angularSpeed * Time.deltaTime, space);
     }
 
