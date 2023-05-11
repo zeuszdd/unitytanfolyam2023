@@ -1,3 +1,6 @@
+using System.Security.Cryptography;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Threading.Tasks.Dataflow;
 using System;
 using UnityEngine;
 using System.Collections.Generic;
@@ -5,6 +8,43 @@ using System.Collections.Generic;
 
 public class Homework : MonoBehaviour
 {
+    /*
+    // Értékcsere
+    int a=3; 
+    int b=8;
+    a+=b;
+    b-=a;
+    b=-b;
+    a-=b;
+    */
+    // Lépkedés fix sebességgel
+    class StepMover:MonoBehaviour
+    {
+        [SerializeField] float speed;
+        Vector3 target;
+        void Start()
+        {
+            target=transform.position;
+        }
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            target += Vector3.up;
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            target += Vector3.down;
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            target += Vector3.right;
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            target += Vector3.left;
+
+            Vector3 selfPos = transform.position;
+            transform.position = Vector3.MoveTowards(selfPos,target,speed * Time.deltaTime);
+        }
+    }
+
+ 
+
+    /*
     int SzamjegyOsszeg(int n)
     {
         int sum = 0;
@@ -64,7 +104,7 @@ public class Homework : MonoBehaviour
         return characters.Count;
 
     }
-    
+    /*
     class NormalizedDirectionVector : MonoBehaviour
     {
         [SerializeField] Vector2 a, b;
@@ -80,7 +120,9 @@ public class Homework : MonoBehaviour
             step = dirVec / stepCount;
         }
     }
+    */
     
+
     /*
     // [SerializeField] int a;
     // [SerializeField] int b;
@@ -180,4 +222,78 @@ public class Homework : MonoBehaviour
 
     }
 */
+
+}
+
+   /*
+    Írj komponenst, ami egy 6 ágú keresztet rajzol a térben pont oda, ahol a komponenshez tartozó GameObject elhelyezkedik!
+
+A keresztnek 3 egymással merőleges tengelye legyen!
+
+A kereszt ágai arra mutassanak, amerre a GameObject lokális jobbra, balra, fel, le, előre és hátra iránya mutat.
+
+A kereszt ágai meghatározott színűek legyenek:
+
+- X tengely: 🔴 Piros
+- Y tengely: 🟢 Zöld
+- Z tengely: 🔵 Kék
+
+Az ágak hossza megegyezik. A hossz egy `[SerializeField]` mezővel beállítható.
+
+Bónusz: A pozitív irányokba (jobbra, fel, előre) mutató ágak végére rajzoljatok egy kis gömböt!
+    */
+
+
+public class Tester : MonoBehaviour
+{
+	[SerializeField] float length;  // Egy tengely hossza
+    
+    void OnDrawGizmos()
+    { 
+	    Vector3 p = transform.position;
+
+        DrawAxis(p, Vector3.right, Color.red);
+        DrawAxis(p, Vector3.up, Color.green);
+        DrawAxis(p, Vector3.forward, Color.blue);
+    }
+    
+    void DrawAxis(Vector3 center, Vector3 axis, Color color)
+    {
+		Vector3 direction = length * transform.TransformDirection(axis);
+		Gizmos.color = color;
+		Gizmos.DrawLine(center - direction, center + direction);
+		Gizmos.DrawSphere(center + direction, 0.1f * length);
+    }
+}
+
+/*
+Írj követőrakéta komponenst! A komponens-nek van egy `[SerializeField] Transform target` beállítása. 
+A követőrakéta mindig ezt a célpontot próbálja elérni a 3D térben.
+
+A rakéta mindig csak…
+
+- előrefelé haladhat egy beállítható fix sebességgel, és
+- legfeljebb fix szögsebességgel fordulhat.
+*/
+public class Rocket : MonoBehaviour
+{
+	[SerializeField] Transform target;
+	[SerializeField] float speed = 5;
+	[SerializeField] float angularSpeed = 180;
+	
+	void Update()
+	{
+		Transform self = transform;
+		
+		Vector3 targetDirection = target.position - self.position;  // Ebben az irányban van a cél
+		Quaternion targetRotation = Quaternion.LookRotation(targetDirection);   // Ahhoz ebbe az irányba akarunk fordulni
+		
+		// Fordulás:
+		float maxAngle = angularSpeed * Time.deltaTime;  // Maximum ekkora szögben fordulhatunk most
+		self.rotation = Quaternion.RotateTowards(self.rotation, targetRotation, maxAngle);  // Towards metódus
+		
+		// Haladás:
+		float offset = speed * Time.deltaTime;   // Ennyit lépünk előre
+		self.position += self.forward * offset;  // Előre irányba megyünk
+	}
 }
