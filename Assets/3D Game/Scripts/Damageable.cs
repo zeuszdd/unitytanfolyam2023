@@ -16,11 +16,28 @@ public class Damageable : MonoBehaviour
 
     int health;
 
+    public int HealthLost
+    { 
+        get 
+        { 
+            return health; 
+        }
+        set 
+        {
+            health = maxHP - value;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         health = maxHP;
         UpdateUI();
+
+        int lost = HealthLost;
+        HealthLost = 12;
+
+        Vector3 pos =transform.position;
     }
 
     public int GetHealth()
@@ -51,6 +68,6 @@ public class Damageable : MonoBehaviour
         healthText.color = c;
         healthText.text = health.ToString();
 
-        isDeadObject.SetActive(true);
+        isDeadObject.SetActive(!IsAlive());
     }
 }
