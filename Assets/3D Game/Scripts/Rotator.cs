@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Rotator : MonoBehaviour
 {
-    [SerializeField] float angularSpeed;
+    [SerializeField] float angularSpeed = 360;
     [SerializeField] Space space;
     [SerializeField] Vector3 axis = Vector3.up;
 
@@ -29,7 +29,7 @@ public class Rotator : MonoBehaviour
             Gizmos.matrix = transform.localToWorldMatrix;
         }
 
-        Vector3 center = Vector3.zero; //transform.position;
+        Vector3 center = space == Space.Self ? Vector3.zero : transform.position;
 
         Vector3 a = center + axis.normalized;
         Vector3 b = center - axis.normalized;

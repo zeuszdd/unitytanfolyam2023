@@ -9,6 +9,7 @@ public class KeyboardController : MonoBehaviour
     [SerializeField] float speed = 1f;
     [SerializeField] float angularSpeed = 180f;
     [SerializeField] Transform cameraTransform;
+    [SerializeField] bool moveInCameraSpace = true;
 
     [SerializeField] Damageable damageable;
 
@@ -79,11 +80,11 @@ public class KeyboardController : MonoBehaviour
         Vector3 cameraRight = cameraTransform.right;
         Vector3 cameraForward = cameraTransform.forward;
 
-        // Vector3 direction = new Vector3(x, 0, z); globális térben
+        // Vector3 direction = new Vector3(x, 0, z); globï¿½lis tï¿½rben
         Vector3 d = x * cameraRight + z * cameraForward;
         d.y = 0;
 
-        d.Normalize(); // Normalizálni kell, keresztmozgásnál gyök2 a sebesség, ehelyett 1 lesz az érték.
+        d.Normalize(); // Normalizï¿½lni kell, keresztmozgï¿½snï¿½l gyï¿½k2 a sebessï¿½g, ehelyett 1 lesz az ï¿½rtï¿½k.
 
         return d;   
     }

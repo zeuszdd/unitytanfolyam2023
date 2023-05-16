@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 
 public class Damageable : MonoBehaviour
 {
-    [SerializeField] int maxHP = 100;
+    [SerializeField, Min(1)] int maxHP = 100;
     [SerializeField] TMP_Text healthText;
 
     //[SerializeField, FormerlySerializedAs("minHP")] Color minHP = Color.red;
@@ -66,7 +66,7 @@ public class Damageable : MonoBehaviour
         Color c = healthColor.Evaluate(t);
 
         healthText.color = c;
-        healthText.text = health.ToString();
+        healthText.text = "HP: " + health;
 
         isDeadObject.SetActive(!IsAlive());
     }

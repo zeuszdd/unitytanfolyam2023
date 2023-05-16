@@ -5,7 +5,7 @@ using UnityEngine;
 public class LongPathMover : MonoBehaviour
 {
     [SerializeField] Vector3[] points;
-    [SerializeField] float speed = 2;
+    [SerializeField] float speed = 10;
     [SerializeField] LineRenderer lineRenderer; 
 
     void OnValidate()

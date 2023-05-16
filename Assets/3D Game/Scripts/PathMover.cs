@@ -6,9 +6,9 @@ public class PathMover : MonoBehaviour
 {
     // [SerializeField] Vector3 point1, point2;
     [SerializeField] Transform t1, t2;
-    [SerializeField] Color c1 = Color.white, c2 = Color.white;
+    [SerializeField] Color c1 = Color.red, c2 = Color.blue;
     [SerializeField] Transform movable;
-    [SerializeField] float speed = 2;
+    [SerializeField] float speed;
 
     [SerializeField, Range (0,1)] float startPoint = 0.5f;
 

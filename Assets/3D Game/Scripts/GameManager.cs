@@ -5,9 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] string sceneName;
     public void RestartGame()
     {
-        SceneManager.LoadScene("3D Game");
+        SceneManager.LoadSceneAsync(sceneName);
     }
 
     // Start is called before the first frame update
