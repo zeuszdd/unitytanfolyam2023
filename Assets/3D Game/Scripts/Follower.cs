@@ -1,6 +1,4 @@
-using System.Drawing;
 using System;
-using System.Numerics;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,14 +27,14 @@ public class Follower : MonoBehaviour
             float t = Mathf.InverseLerp(bigRange, smallRange, distance);
             float actualSpeed = Mathf.Lerp(0, speed, t);
 
-            transform.position = Vector3.MoveTowards(selfPoint, targetPoint, actialSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(selfPoint, targetPoint, actualSpeed * Time.deltaTime);
         }
     }
 
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(TransformBlock.position, smallRange);
-        Gizmos.DrawWireSphere(TransformBlock.position, bigRange);
+        Gizmos.DrawWireSphere(transform.position, smallRange);
+        Gizmos.DrawWireSphere(transform.position, bigRange);
     }
 }
