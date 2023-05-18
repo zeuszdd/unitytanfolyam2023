@@ -295,3 +295,107 @@ public class Rocket : MonoBehaviour
 		self.position += self.forward * offset;  // Előre irányba megyünk
 	}
 }
+
+/*
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp1.0</TargetFramework>
+    </PropertyGroup>
+</Project>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp1.0</TargetFramework>
+    </PropertyGroup>
+</Project>
+elso
+using UnityEngine;
+
+public class ConnectingLine : MonoBehaviour
+{
+    [SerializeField] Transform other;
+    [SerializeField] float maxLength = 10;
+
+    void OnDrawGizmos()
+    {
+        if (other == null)
+            return;
+
+        Vector3 otherPos = other.position;
+        Vector3 selfPos = transform.position;
+        
+        // Távolság kiszámítása
+        float distance = Vector3.Distance(otherPos, selfPos);
+        
+        // Ha határértéken belül van a másik objektum
+        if (distance <= maxLength)
+        {
+            if (distance > maxLength * 0.9f)   // Ha 90% felett
+                Gizmos.color = Color.red;
+            else
+                Gizmos.color = Color.green;
+            
+            Gizmos.DrawLine(otherPos, selfPos);
+        }
+    }
+}
+masodik
+public classChildRotator: MonoBehaviour
+{
+    [SerializeField] floatbaseAngularSpeed= 1f;
+
+    void Update()
+    {
+        foreach (Transform child in GetComponentsInChildren<Transform>())
+        {
+            if (child.GetComponent<MeshRenderer>() != null)
+            {
+                float angularSpeed = baseAngularSpeed;
+								
+								//Bónusz feladat:
+								angularSpeed /= Vector3.Distance(child.position, transform.position);
+
+                child.Rotate(0, angularSpeed * Time.deltaTime, 0);
+            }
+        }
+    }
+}
+harmadik
+string[] Combine(string[] a1, string[] a2)
+{
+	string[] c = new string[a1.Length + a2.Length];
+	
+	for (int i = 0; i < a1.Length; i++)
+		c[i] = a1[i];
+	
+	for (int i = 0; i < a2.Length; i++)
+		c[a1.Length + i] = a2[i];
+	
+	return c;
+}
+bonusz
+int BinaryToDecimal(int binaryNum)
+{
+    int decimalNum = 0;    // Kinullázom a végeredményt 
+    int digitValue = 1;    // Ebben számolom, hogy az egyes helyiértéken mennyivel szorzunk
+
+    while (binaryNum > 0)  // Egyenként végigmegyek a bináris szám minden számjegyén
+    {
+        int digit = binaryNum % 10;    // Levágjuk az utolsó számjegyet
+
+        if (digit > 1)         // Ha bármelyik számjegy nem 0 vagy 1
+        {
+            decimalNum = 0;    // akkor az eredmény 0
+            break;             // ás kilépünk a ciklusból
+        }
+
+        decimalNum += digit * digitValue;
+
+        binaryNum = binaryNum / 10;   // Törlöm az utolsó számjegyet (Azt már kezeltem)
+        digitValue *= 2;              // Következő helyiérték már dupla akkora szorzójú
+    }
+
+    return decimalNum;
+}
+*/
