@@ -6,6 +6,7 @@ class CursorExplorer : MonoBehaviour
     [SerializeField] float range = 10;
     [SerializeField] float maxForce = 100;
     [SerializeField] new ParticleSystem particleSystem;
+    [SerializeField] LayerMask clickMask;
 
     void Update()
     {
@@ -14,7 +15,7 @@ class CursorExplorer : MonoBehaviour
         Camera camera = Camera.main;
         Ray ray = camera.ScreenPointToRay(cursorScreenPos);
 
-        bool isHit = Physics.Raycast(ray, out RaycastHit hit);
+        bool isHit = Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, clickMask);
 
         if (isHit)
         {
@@ -33,6 +34,7 @@ class CursorExplorer : MonoBehaviour
     void Explode(Vector3 position)
     {
         particleSystem.Play();
+
         Rigidbody[] allRigidbodies = FindObjectsOfType<Rigidbody>();
 
         foreach (Rigidbody rb in allRigidbodies)
