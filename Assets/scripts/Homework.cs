@@ -398,4 +398,151 @@ int BinaryToDecimal(int binaryNum)
 
     return decimalNum;
 }
+/*
+- **Lézer célzó**
+    
+    Írj komponenst, ami egy sugarat lő (Raycasting) saját pozíciójából lokális előre irányába!
+    
+    A komponensnek [SerializeField] beállításként megadható GameObject-ek egy tömbje.
+    
+    Ha a sugárvetés célt talált, akkor tömb elemeit felsorakoztatja a célzás és találat pontjai közé egyenlő távolságra. Ha a sugárvetés nem talált célt, a tömb elemeit inaktiválja!
+    
+    Lehessen a komponensnek beállítani maximális távolságot!
+
+    using UnityEngine;
+
+public class Pointer : MonoBehaviour
+{ 
+    [SerializeField] float rayLength = 100f;
+    [SerializeField] GameObject[] objects;
+
+    void Update()
+    {
+        Vector3 position = transform.position; // Pozíció
+        Ray ray = new Ray(position, transform.forward); // Előre mutató sugár
+
+        bool isHit = Physics.Raycast(ray, out RaycastHit hit, rayLength); // Sugárvetés = raycast
+
+        foreach (GameObject o in objects)   // Végigmegyek az összes objektumon
+            o.SetActive(isHit);             // Ki vgy be kapcsolom az objektumokat
+                                            // függően attól, hogy történt e találat
+
+        if (isHit) // Ha van találat
+        {
+            for (int index = 0; index < objects.Length; index++) // Az összese elemre:
+            {
+                float rate = index / (objects.Length - 1f); // 0-1 közötti érték
+                Vector3 p = Vector3.Lerp(position, hit.point, rate); // Lineáris interpoláció
+                objects[index].transform.position = p; // Pozíció beállítása
+            }
+        }
+    }
+
+    void OnDrawGizmos()
+    {
+        Vector3 position = transform.position;                                  // Pozíció
+        Ray ray = new Ray(position, transform.forward );            // Előre mutató sugár 
+        Gizmos.color = Color.red;                                               // Gizmos színe
+        Gizmos.DrawLine(ray.origin, ray.origin + (ray.direction * rayLength));  // Sugár kirajzolása 
+    }
+
+    2.
+    Írj bolygó (Planet) komponenst, aminek gravitációs hatása van minden többi bolygóra.
+
+Minden bolygónak van egy beállítható tömege.
+
+Minden test vonz egy másik testet a Newtoni tömegvonzás törvénye szerint.
+
+A megoldáshoz ne használj RigidBody-t!
+using UnityEngine;
+
+public class Planet : MonoBehaviour
+{
+    [SerializeField, Min(0)] float mass = 1;   // tömeg 
+    
+    Vector3 velocity;             // Sebességvektor
+
+    // Kiszámolom a méretet a tömeg alapján (NEM VOLT FELADAT)
+    void OnValidate()
+    {
+        float scale = Mathf.Pow(mass, 1/3f); // a tömeg köbgyöke
+        transform.localScale = new Vector3(scale, scale, scale);
+    }
+
+    // A gyorsulást és lassulást érdemes a FixedUpdate-ben kezelni:
+    void FixedUpdate()
+    {
+        float gravity = 5; // Newton féle gravitatációs állandó (saját értékkel)
+        foreach (var otherPlanet in FindObjectsOfType<Planet>())  // Minden egyéb bolygó hat ránk
+        {
+            if(otherPlanet == this)    // Saját magára nem hat a bolygó
+                continue; // Következő bolygóra lépünk
+            
+            Vector3 distanceVector = otherPlanet.transform.position - transform.position;
+            if(distanceVector == Vector3.zero)
+                continue; // Következő bolygóra lépünk
+            
+            float distance = distanceVector.magnitude;      // Távolság
+            Vector3 direction = distanceVector.normalized;  // Irányvektor
+            
+            float acceleration = gravity * otherPlanet.mass / distance;
+            // NEM A TÁVOLSÁG NÉGYZETÉVEL OSZTOK!!!
+            // Mint az a valós fizika szerint történne!
+            // Ennek oka, hogy túl nehéz vele stabil rendszert építeni, ami nem esik szét.
+            
+            velocity += direction * (acceleration * Time.fixedDeltaTime); // gravitációs gyorsulás
+        }
+    }
+    
+    // Az elmozdulást érdemes az Update-ben kezelni:
+    void Update()
+    {
+        transform.position += velocity * Time.deltaTime;
+    }
+
+    // Sebességvektor kirajzolása (NEM VOLT FELADAT)
+    void OnDrawGizmos()
+    {
+        Gizmos.color = new Color(1,1,1,0.25f); // Átlátszó fehér 
+        Gizmos.DrawLine(transform.position, transform.position + (velocity * 0.5f)); // Sebességvektor
+    }
+}
+3.
+// Listával és triggerekkel
+
+using System.Collections.Generic;
+using UnityEngine;
+
+class GravityModifier : MonoBehaviour
+{
+		//Kifejtett gyorsulás
+    [SerializeField] Vector3 gravity = new(0, 10, 0); 
+
+		// Itt tárolom az éppen triggeren belül lévőket
+    List<Rigidbody> _rigidbodies = new();
+
+		// Tárolom a belépőket
+    void OnTriggerEnter(Collider other)
+    {
+        Rigidbody rb = other.attachedRigidbody;
+        if (rb != null)            
+            _rigidbodies.Add(rb);
+    }
+    
+		// Törlöm a listából a távozókat
+    void OnTriggerExit(Collider other)
+    {
+        Rigidbody rb = other.attachedRigidbody;
+        if (rb != null)
+            _rigidbodies.Remove(rb);
+    }
+
+    void FixedUpdate()
+    { 
+				// Hozzáadom a gyorsulást
+        foreach (Rigidbody rb in _rigidbodies)
+		        rb.AddForce(gravity, ForceMode.Acceleration);
+    }
+}
+}
 */
