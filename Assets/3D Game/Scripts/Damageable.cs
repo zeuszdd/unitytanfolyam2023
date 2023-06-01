@@ -8,6 +8,8 @@ public class Damageable : MonoBehaviour
 {
     [SerializeField, Min(1)] int maxHP = 100;
     [SerializeField] TMP_Text healthText;
+    [SerializeField] float invincibilityFrames = 1;
+    [SerializeField] float flickTime = 0.1f;
 
     //[SerializeField, FormerlySerializedAs("minHP")] Color minHP = Color.red;
     //[SerializeField] Color maxHP = Color.green;
@@ -15,6 +17,7 @@ public class Damageable : MonoBehaviour
     [SerializeField] GameObject isDeadObject;
 
     int health;
+    bool isInvincible = false;
 
     public int HealthLost
     { 
@@ -56,9 +59,37 @@ public class Damageable : MonoBehaviour
         health = Mathf.Max(health, 0);
 
         UpdateUI();
+        StartCoroutine(InvincibilityCoroutine());
         //Debug.Log("AAAUUUUUU!" + health);
     }
 
+    IEnumerator InvincibilityCoroutine()
+    {
+        isInvincible = true;
+        //yield return new WaitForSeconds(invincibilityFrames);
+
+        float time = 0;
+        bool enabled = true;
+        while (time < invincibilityFrames)
+        {
+            enabled = !enabled;
+
+            EnableAllRenderer(enabled);
+            yield return new WaitForSeconds(flickTime);
+            time += flickTime;
+        }
+
+        EnableAllRenderer(true);
+        isInvincible = false;
+    }
+
+    void EnableAllRenderer(bool enabled)
+    {
+        foreach (var renderer in GetComponentsInChildren<Renderer>())
+        {
+            renderer.enabled = enabled;
+        }
+    }
     void UpdateUI()
     {
         float t = (float)health / maxHP;

@@ -12,6 +12,7 @@ public class KeyboardController : MonoBehaviour
     [SerializeField] bool moveInCameraSpace = true;
 
     [SerializeField] Damageable damageable;
+    [SerializeField] Rigidbody rigidBody;
 
     // Start is called before the first frame update
     void Start()
@@ -38,13 +39,13 @@ public class KeyboardController : MonoBehaviour
         if (direction!=Vector3.zero)
         {
             Vector3 velocity = direction * speed;
-            transform.position += velocity * Time.deltaTime;
+            rigidBody.MovePosition(rigidBody.position + velocity * Time.deltaTime);
 
             Quaternion targetRot = Quaternion.LookRotation(direction);
             Quaternion currentRot = transform.rotation;
 
             float step = angularSpeed * Time.deltaTime;
-            transform.rotation = Quaternion.RotateTowards(currentRot, targetRot, step);
+            rigidBody.rotation = Quaternion.RotateTowards(currentRot, targetRot, step);
             //transform.rotation = Quaternion.LookRotation(direction);
 
         }
