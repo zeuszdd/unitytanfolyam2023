@@ -546,3 +546,150 @@ class GravityModifier : MonoBehaviour
 }
 }
 */
+/*
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Pointer : MonoBehaviour
+{ 
+    [SerializeField] float rayLength = 100f;           // Sugárvetés maximális hossza
+    [SerializeField] float distance = 0.25f;           // Két célzópont távolsága
+    [SerializeField] GameObject prototype;             // Ebből készítünk másolatokat
+
+    List<GameObject> objects = new List<GameObject>(); // Ebbe a listába tesszük ez elemeket
+
+    void Update()
+    {
+        Vector3 position = transform.position;            // Pozíció
+        Vector3 forward = transform.forward;              // Előre irány
+        Ray ray = new Ray(position, forward); // Előre mutató sugár
+
+        bool isHit = Physics.Raycast(ray, out RaycastHit hit, rayLength); // Sugárvetés = raycast 
+        
+        int count = 0; // Hány elemet rejzoljuk ki
+        
+        if (isHit) // Ha van találat
+        {
+            // Hány elemet rejzoljuk ki:
+            count = Mathf.CeilToInt(Vector3.Distance(position, hit.point) / distance);
+            
+            // Ha nincsenek létrehozva, példányosítom és eltárolom a célzópontokat
+            while (count > objects.Count)
+            {
+                GameObject newInstance = Instantiate(prototype);
+                objects.Add(newInstance);
+            }
+            
+            for (int i = 0; i < count; i++)     // Az összese megjelenítendő objektumra:
+            {
+                objects[i].SetActive(true);                         // bekapcsolás
+                Vector3 p = position + (i * distance * forward);    // pozíció kiszámítása
+                objects[i].transform.position = p;                  // Pozíció beállítása
+            }
+        }
+
+        // Az összese NEM megjelenítendő objektumra:
+        for (int i = count; i < objects.Count; i++)
+            objects[i].SetActive(false);  // kikapcsolás
+    }
+
+    void OnDrawGizmos()
+    {
+        Vector3 position = transform.position;                                  // Pozíció
+        Ray ray = new Ray(position, transform.forward );            // Előre mutató sugár 
+        Gizmos.color = Color.red;                                               // Gizmos színe
+        Gizmos.DrawLine(ray.origin, ray.origin + (ray.direction * rayLength));  // Sugár kirajzolása 
+    }
+}
+2. feladat
+using UnityEngine;
+ 
+public class Magnet : MonoBehaviour
+{
+    [SerializeField] new Rigidbody2D rigidbody;
+    [SerializeField] float power;
+    [SerializeField] bool isPositive;
+ 
+    void FixedUpdate()
+    {
+        Magnet[] magnets = FindObjectsOfType<Magnet>();
+
+//  	  for(int i = 0; i < magnets.Length; i++) // for ciklus is lehetne
+//			{
+//					Magnet other = magnets[i];
+
+        foreach (Magnet other in magnets)       // for ciklus is lehetne
+        {                                       // Látsd fentebb ↑
+
+            if (other == this) continue;        // Saját magára nem hat
+            
+            Vector2 vector = other.transform.position - transform.position;
+            float distance = vector.magnitude;  // Távolság
+            Vector2 direction = vector;         // Irány
+            
+            if(isPositive != other.isPositive)  // Ha ellentétesek a pólusok
+                direction *= -1;                // akkor vonzzák egymást
+            
+            //A kifejtett erő:
+
+						// egyenesen arányos mindkét pólus erejével,
+            float force = power * other.power;
+						// és fordítottan a távolság négyzetével.
+            force /= distance * distance;
+            
+						// Erőt fejtünk ki a másikra
+            other.rigidbody.AddForce(direction * force);
+        }
+    }
+}
+3. feladat
+
+Készíts bombát, ami egy idő letelte után ellöki a körülötte lévő RigidBody-kat és megsemmisíti önmagát.
+
+A robbanásnak van egy beállítható ereje és hatótávolsága.
+
+A hatótáv széléhez közeledve gyengül a lökés ereje.
+
+- Illusztráció
+    
+    [2022-10-24_18-13-03-523 (2).mp4](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/62778800-125d-47b5-ad56-eb62f4e897fd/2022-10-24_18-13-03-523_(2).mp4)
+    
+- Megoldás
+using UnityEngine;
+
+public class Bomb : MonoBehaviour
+{
+    [SerializeField] float delay = 5f;
+    [SerializeField] float force = 25f;
+    [SerializeField] float range = 5f;
+    [SerializeField] float up = 0.5f;
+    
+    float _startTime;
+
+    void Start()
+    {
+        _startTime = Time.time;
+    }
+
+    void Update()
+    {
+        if (Time.time - _startTime > delay)
+        {
+            Explode();
+            Destroy(gameObject);
+        }
+    }
+
+    void Explode()
+    {
+        Rigidbody[] rigidbodies = FindObjectsOfType<Rigidbody>();
+        foreach (Rigidbody rb in rigidbodies)
+						rb.AddExplosionForce(
+								force,
+								transform.position,
+								range,
+								up,
+								ForceMode.Impulse); 
+	  }
+}
+*/
