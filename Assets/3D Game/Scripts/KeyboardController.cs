@@ -30,10 +30,12 @@ public class KeyboardController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*
         if (damageable!=null&&!damageable.IsAlive()) 
         {
             return;
         }
+        */
         Vector3 direction = GetInputDirection();
 
         if (direction!=Vector3.zero)

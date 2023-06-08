@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class Damageable : MonoBehaviour
 {
-    [SerializeField, Min(1)] int maxHP = 100;
+    [SerializeField] int maxHP = 10;
     [SerializeField] TMP_Text healthText;
     [SerializeField] float invincibilityFrames = 1;
     [SerializeField] float flickTime = 0.1f;
 
-    //[SerializeField, FormerlySerializedAs("minHP")] Color minHP = Color.red;
-    //[SerializeField] Color maxHP = Color.green;
+    [SerializeField] RectTransform healthBar;
+
     [SerializeField] Gradient healthColor;
     [SerializeField] GameObject isDeadObject;
 
@@ -20,61 +20,47 @@ public class Damageable : MonoBehaviour
     bool isInvincible = false;
 
     public int HealthLost
-    { 
-        get 
-        { 
-            return health; 
-        }
-        set 
-        {
-            health = maxHP - value;
-        }
+    {
+        get => maxHP - health;
+        set => health = maxHP - value;
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         health = maxHP;
         UpdateUI();
 
-        int lost = HealthLost;
-        HealthLost = 12;
-
-        Vector3 pos =transform.position;
+        Vector3 pos = transform.position;
     }
 
-    public int GetHealth()
-    { 
-        return health; 
-    }
-    
-    public bool IsAlive()
-    {
-        return health > 0;
-    }
-   
+    public int GetHealth() => health;
+
+    public bool IsAlive => health > 0;
+
     public void Damage(int n)
     {
+        if (isInvincible)
+            return;
+
         health -= n;
         health = Mathf.Max(health, 0);
 
         UpdateUI();
         StartCoroutine(InvincibilityCoroutine());
-        //Debug.Log("AAAUUUUUU!" + health);
     }
 
     IEnumerator InvincibilityCoroutine()
     {
         isInvincible = true;
-        //yield return new WaitForSeconds(invincibilityFrames);
+        // yield return new WaitForSeconds(invincibilityFrames);
 
         float time = 0;
-        bool enabled = true;
+        bool visible = true;
         while (time < invincibilityFrames)
         {
-            enabled = !enabled;
+            visible = !visible;
 
-            EnableAllRenderer(enabled);
+            EnableAllRenderer(visible);
             yield return new WaitForSeconds(flickTime);
             time += flickTime;
         }
@@ -90,15 +76,23 @@ public class Damageable : MonoBehaviour
             renderer.enabled = enabled;
         }
     }
+
     void UpdateUI()
     {
         float t = (float)health / maxHP;
-        //Color c = Color.Lerp(minHPColor, maxHPColor, t);
+        // Color c = Color.Lerp(minHPColor, maxHPColor, t);
         Color c = healthColor.Evaluate(t);
 
         healthText.color = c;
-        healthText.text = "HP: " + health;
+        healthText.text = health.ToString();
 
-        isDeadObject.SetActive(!IsAlive());
+        Vector2 anchorMax = healthBar.anchorMax;
+        anchorMax.x = t;
+        healthBar.anchorMax = anchorMax;
+        Image image = healthBar.GetComponent<Image>();
+        image.color = c;
+
+
+        isDeadObject.SetActive(!IsAlive);
     }
 }
